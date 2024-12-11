@@ -155,14 +155,15 @@ const RentalManagementDashboard = () => {
         </motion.button>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div className="flex-col space-y-8">
+    {/* Stats Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <motion.div
             key={stat.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="bg-gradient-to-br from-gray-100 to-blue-200 rounded-xl shadow-lg p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -205,7 +206,7 @@ const RentalManagementDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 bg-white backdrop-blur-lg bg-white/50 rounded-xl shadow-lg p-6 border border-gray-100"
+          className="lg:col-span-2 bg-gray-100 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-100"
         >
           <h3 className="text-lg font-semibold mb-4">Rental Income</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -231,24 +232,39 @@ const RentalManagementDashboard = () => {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* Property Status */}
-        <motion.div
+         {/* Upcoming Leases */}
+         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl shadow-lg p-6"
+          className="bg-gradient-to-br from-gray-400 to-indigo-500 text-white rounded-xl shadow-lg p-6"
         >
-          <h3 className="text-lg font-semibold mb-4">Property Status</h3>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Upcoming Payments
+          </h2>
           <div className="space-y-4">
-            {properties.map((property) => (
+            {[1, 2, 3].map((item) => (
               <motion.div
-                key={property.id}
                 whileHover={{ scale: 1.02 }}
-                className="p-4 rounded-lg bg-white/10 backdrop-blur-lg cursor-pointer hover:bg-white/20 transition-colors"
+                key={item}
+                className="p-4 rounded-lg bg-white/10 backdrop-blur-md"
               >
-                <h4 className="font-medium">{property.name}</h4>
-                <p className="text-sm text-purple-200 mt-1">
-                  {property.units.length} Units
-                </p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <CurrencyDollarIcon className="w-5 h-5 text-green-700" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      Rent Payment Due
+                    </p>
+                    <p className="text-sm text-gray-200">Unit B-456</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-white">Kshs. 1,200</p>
+                  <span className="text-[13px] text-red-600 font-semibold px-4 py-1 bg-blue-200/20 rounded-lg">
+                    Due in 5 days
+                  </span>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -261,7 +277,7 @@ const RentalManagementDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg p-6"
+          className="bg-gradient-to-br from-orange-600 to-red-400 text-white rounded-xl shadow-lg p-6"
         >
           <h3 className="text-lg font-semibold mb-4">Maintenance Requests</h3>
           <div className="space-y-4">
@@ -297,7 +313,7 @@ const RentalManagementDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-orange-500 to-pink-600 text-white rounded-xl shadow-lg p-6"
+          className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg p-6"
         >
           <h3 className="text-lg font-semibold mb-4">Recent Payments</h3>
           <div className="space-y-4">
@@ -316,44 +332,31 @@ const RentalManagementDashboard = () => {
           </div>
         </motion.div>
 
-        {/* Upcoming Leases */}
-        <motion.div
+       {/* Property Status */}
+       <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-xl shadow-lg p-6"
+          className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white rounded-xl shadow-lg p-6"
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Upcoming Payments
-          </h2>
+          <h3 className="text-lg font-semibold mb-4">Property Status</h3>
           <div className="space-y-4">
-            {[1, 2, 3].map((item) => (
+            {properties.map((property) => (
               <motion.div
+                key={property.id}
                 whileHover={{ scale: 1.02 }}
-                key={item}
-                className="p-4 rounded-lg bg-white/10 backdrop-blur-md"
+                className="p-4 rounded-lg bg-white/10 backdrop-blur-lg cursor-pointer hover:bg-white/20 transition-colors"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <CurrencyDollarIcon className="w-5 h-5 text-green-700" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-800">
-                      Rent Payment Due
-                    </p>
-                    <p className="text-sm text-gray-200">Unit B-456</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-gray-900">$1,200</p>
-                  <span className="text-sm font-medium px-4 py-1 bg-blue-400/20 rounded-lg">
-                    Due in 5 days
-                  </span>
-                </div>
+                <h4 className="font-medium">{property.name}</h4>
+                <p className="text-sm text-purple-200 mt-1">
+                  {property.units.length} Units
+                </p>
               </motion.div>
             ))}
           </div>
         </motion.div>
       </div>
+</div>
+      
     </div>
   );
 };

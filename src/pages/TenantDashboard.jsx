@@ -10,9 +10,13 @@ import {
   ArrowDownTrayIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from "../context/AuthContext"; // Import the useAuth hook
+import { useNavigate } from "react-router-dom";
 
 const TenantDashboard = () => {
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+  const navigate = useNavigate;
+  const { logout, user } = useAuth(); // Destructure logout and user from useAuth
 
   // Mock data
   const tenantData = {
@@ -79,20 +83,36 @@ const TenantDashboard = () => {
     new Date()
   );
 
+  const handleLogout = () => {
+    logout(); // Call the logout method from AuthContext
+    navigate("/login"); // Navigate to login page after logout
+  };
+
   return (
-    <div className="px-10 py-12 space-y-6  min-h-screen">
+    <div className="px-10 py-12 space-y-6 bg-gray-200 min-h-screen">
       {/* Header Section */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Tenant Dashboard</h1>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setShowMaintenanceModal(true)}
-          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
-        >
-          <WrenchIcon className="w-5 h-5" />
-          <span>New Maintenance Request</span>
-        </motion.button>
+        <div className="flex space-x-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowMaintenanceModal(true)}
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+          >
+            <WrenchIcon className="w-5 h-5" />
+            <span>New Maintenance Request</span>
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleLogout}
+            className="px-4 py-2 bg-gradient-to-r from-red-500 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+          >
+            <WrenchIcon className="w-5 h-5" />
+            <span>Logout</span>
+          </motion.button>
+        </div>
       </div>
 
       {/* Unit Details & Next Payment */}
@@ -169,6 +189,28 @@ const TenantDashboard = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Documents Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-xl shadow-lg p-6"
+      >
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Documents</h2>
+        <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <DocumentTextIcon className="w-8 h-8 text-blue-600" />
+            <div>
+              <h3 className="font-medium text-gray-900">Lease Agreement</h3>
+              <p className="text-sm text-gray-500">Valid until Dec 31, 2024</p>
+            </div>
+          </div>
+          <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+            <ArrowDownTrayIcon className="w-5 h-5" />
+            <span>Download</span>
+          </button>
+        </div>
+      </motion.div>
 
       {/* Payment History & Documents */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -278,28 +320,6 @@ const TenantDashboard = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Documents Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-lg p-6"
-      >
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Documents</h2>
-        <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <DocumentTextIcon className="w-8 h-8 text-blue-600" />
-            <div>
-              <h3 className="font-medium text-gray-900">Lease Agreement</h3>
-              <p className="text-sm text-gray-500">Valid until Dec 31, 2024</p>
-            </div>
-          </div>
-          <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
-            <ArrowDownTrayIcon className="w-5 h-5" />
-            <span>Download</span>
-          </button>
-        </div>
-      </motion.div>
 
       {/* Maintenance Request Modal */}
       <AnimatePresence>

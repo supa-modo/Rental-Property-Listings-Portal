@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import RentalManagementDashboard from "./Homepage";
 import PaymentsPage from "./pages/PaymentsPage";
 import PropertiesPage from "./pages/PropertiesPage";
@@ -8,49 +8,77 @@ import ReportsPage from "./pages/ReportsPage";
 import ProfilePage from "./pages/ProfilePage";
 import TenantDashboard from "./pages/TenantDashboard";
 import Layout from "./components/Layout";
-import { Component } from 'react';
+import LoginPage from "./pages/LoginPage";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
 
-class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
+const AdminLayout = () => (
+  <ProtectedRoute allowedRoles={['admin']}>
+    <Layout>
+      <Outlet />
+    </Layout>
+  </ProtectedRoute>
+);
+
+const TenantRoute = () => (
+  <ProtectedRoute allowedRoles={['tenant']}>
+    <TenantDashboard />
+  </ProtectedRoute>
+);
+
+const LoginRoute = () => {
+  const { user } = useAuth();
+  
+  if (user) {
+    return <Navigate to={user.role === 'tenant' ? '/tenant-dashboard' : '/dashboard'} replace />;
   }
+  
+  return <LoginPage />;
+};
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
+const RootRedirect = () => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
+  
+  return <Navigate to={user.role === 'tenant' ? '/tenant-dashboard' : '/dashboard'} replace />;
+};
 
-  componentDidCatch(error, errorInfo) {
-    console.error('Error:', error);
-    console.error('Error Info:', errorInfo);
-  }
+const AppContent = () => {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginRoute />} />
+      <Route path="/" element={<RootRedirect />} />
 
-  render() {
-    if (this.state.hasError) {
-      return <div className="p-4">Something went wrong. Please try refreshing the page.</div>;
-    }
+      {/* Admin Routes */}
+      <Route element={<AdminLayout />}>
+        <Route path="/dashboard" element={<RentalManagementDashboard />} />
+        <Route path="/tenants" element={<TenantsPage />} />
+        <Route path="/properties" element={<PropertiesPage />} />
+        <Route path="/payments" element={<PaymentsPage />} />
+        <Route path="/maintenance" element={<MaintenancePage />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Route>
 
-    return this.props.children;
-  }
-}
+      {/* Tenant Route */}
+      <Route path="/tenant-dashboard" element={<TenantRoute />} />
+
+      {/* Catch all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
 
 function App() {
   return (
     <Router>
-      <ErrorBoundary>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<RentalManagementDashboard />} />
-            <Route path="/tenants" element={<TenantsPage />} />
-            <Route path="/properties" element={<PropertiesPage />} />
-            <Route path="/payments" element={<PaymentsPage />} />
-            <Route path="/maintenance" element={<MaintenancePage />} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/tenant-dashboard" element={<TenantDashboard />} />
-          </Routes>
-        </Layout>
-      </ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }

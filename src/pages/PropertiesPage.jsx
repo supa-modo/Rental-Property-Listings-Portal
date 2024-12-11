@@ -17,6 +17,58 @@ const PropertiesPage = () => {
       occupancyRate: "67%",
       monthlyRevenue: 3700,
     },
+    {
+      id: 1,
+      name: "Sunset Apartments",
+      address: "123 Sunset Blvd",
+      units: [
+        { number: "101", status: "Occupied", rent: 1200 },
+        { number: "102", status: "Vacant", rent: 1200 },
+        { number: "103", status: "Maintenance", rent: 1300 },
+      ],
+      totalUnits: 3,
+      occupancyRate: "67%",
+      monthlyRevenue: 3700,
+    },
+    {
+      id: 1,
+      name: "Sunset Apartments",
+      address: "123 Sunset Blvd",
+      units: [
+        { number: "101", status: "Occupied", rent: 1200 },
+        { number: "102", status: "Vacant", rent: 1200 },
+        { number: "103", status: "Maintenance", rent: 1300 },
+      ],
+      totalUnits: 3,
+      occupancyRate: "67%",
+      monthlyRevenue: 3700,
+    },
+    {
+      id: 1,
+      name: "Sunset Apartments",
+      address: "123 Sunset Blvd",
+      units: [
+        { number: "101", status: "Occupied", rent: 1200 },
+        { number: "102", status: "Vacant", rent: 1200 },
+        { number: "103", status: "Maintenance", rent: 1300 },
+      ],
+      totalUnits: 3,
+      occupancyRate: "67%",
+      monthlyRevenue: 3700,
+    },
+    {
+      id: 1,
+      name: "Sunset Apartments",
+      address: "123 Sunset Blvd",
+      units: [
+        { number: "101", status: "Occupied", rent: 1200 },
+        { number: "102", status: "Vacant", rent: 1200 },
+        { number: "103", status: "Maintenance", rent: 1300 },
+      ],
+      totalUnits: 3,
+      occupancyRate: "67%",
+      monthlyRevenue: 3700,
+    },
     // Add more properties
   ]);
 
