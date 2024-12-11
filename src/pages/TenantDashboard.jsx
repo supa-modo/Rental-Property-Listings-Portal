@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/AuthContext"; // Import the useAuth hook
 import { useNavigate } from "react-router-dom";
+import { LuLogOut } from "react-icons/lu";
 
 const TenantDashboard = () => {
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
@@ -89,7 +90,7 @@ const TenantDashboard = () => {
   };
 
   return (
-    <div className="px-10 py-12 space-y-6 bg-gray-200 min-h-screen">
+    <div className="max-w-screen-2xl mx-auto px-10 py-12 space-y-6 min-h-screen">
       {/* Header Section */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Tenant Dashboard</h1>
@@ -107,9 +108,9 @@ const TenantDashboard = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleLogout}
-            className="px-4 py-2 bg-gradient-to-r from-red-500 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
+            className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-2"
           >
-            <WrenchIcon className="w-5 h-5" />
+            <LuLogOut className="w-5 h-5" />
             <span>Logout</span>
           </motion.button>
         </div>

@@ -16,6 +16,30 @@ const MaintenancePage = () => {
       assignedTo: "Mike Smith",
       estimatedCost: 250,
     },
+    {
+      id: 1,
+      unit: "Unit 101",
+      issue: "Plumbing leak in bathroom",
+      priority: "High",
+      status: "Pending",
+      reportedBy: "John Doe",
+      reportedDate: "2024-12-08",
+      description: "Water leaking from under sink, causing floor damage",
+      assignedTo: "Mike Smith",
+      estimatedCost: 250,
+    },
+    {
+      id: 1,
+      unit: "Unit 101",
+      issue: "Plumbing leak in bathroom",
+      priority: "High",
+      status: "Pending",
+      reportedBy: "John Doe",
+      reportedDate: "2024-12-08",
+      description: "Water leaking from under sink, causing floor damage",
+      assignedTo: "Mike Smith",
+      estimatedCost: 250,
+    },
     // Add more maintenance requests
   ]);
 
