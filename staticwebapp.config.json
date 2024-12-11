@@ -1,0 +1,53 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/login",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/dashboard",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/tenants",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/properties",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/payments",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/maintenance",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/reports",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statusCode": 200
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/images/*", "/css/*", "/js/*", "/favicon.ico"]
+  }
+}
