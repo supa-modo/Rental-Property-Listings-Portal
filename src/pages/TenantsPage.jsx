@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { PlusIcon, UserGroupIcon, HomeIcon } from "@heroicons/react/24/outline";
 
 const TenantsPage = () => {
   const [tenants, setTenants] = useState([
     {
       id: 1,
       name: "John Doe",
+      propertyName: "Sunset Apartments",
       unit: "Unit 101",
       contact: "+1234567890",
       email: "john@example.com",
@@ -15,66 +17,27 @@ const TenantsPage = () => {
       rentStatus: "Paid",
     },
     {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
+      id: 2,
+      name: "Jane Smith",
+      propertyName: "Sunset Apartments",
+      unit: "Unit 102",
+      contact: "+1234567891",
+      email: "jane@example.com",
+      moveInDate: "2023-02-01",
       status: "Active",
-      rentStatus: "Paid",
+      rentStatus: "Due",
     },
     {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
+      id: 3,
+      name: "Mike Johnson",
+      propertyName: "Oakwood Heights",
+      unit: "Unit 201",
+      contact: "+1234567892",
+      email: "mike@example.com",
+      moveInDate: "2023-03-15",
       status: "Active",
       rentStatus: "Paid",
     },
-    {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
-      status: "Active",
-      rentStatus: "Paid",
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
-      status: "Active",
-      rentStatus: "Paid",
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
-      status: "Active",
-      rentStatus: "Paid",
-    },
-    {
-      id: 1,
-      name: "John Doe",
-      unit: "Unit 101",
-      contact: "+1234567890",
-      email: "john@example.com",
-      moveInDate: "2023-01-15",
-      status: "Active",
-      rentStatus: "Paid",
-    },
-    // Add more sample tenants
   ]);
 
   const [isAddingTenant, setIsAddingTenant] = useState(false);
@@ -89,82 +52,130 @@ const TenantsPage = () => {
     reset();
   };
 
+  // Group tenants by property
+  const groupedTenants = tenants.reduce((acc, tenant) => {
+    if (!acc[tenant.propertyName]) {
+      acc[tenant.propertyName] = [];
+    }
+    acc[tenant.propertyName].push(tenant);
+    return acc;
+  }, {});
+
   return (
-    <div className="p-12 min-h-screen space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Tenant Management</h1>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setIsAddingTenant(true)}
-          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all"
-        >
-          Add New Tenant
-        </motion.button>
+    <div>
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <UserGroupIcon className="w-8 h-8 text-blue-600" />
+              <div className="ml-4">
+                <h1 className="text-xl font-semibold text-gray-900">Tenants</h1>
+                <p className="text-sm text-gray-500">
+                  Manage your property tenants
+                </p>
+              </div>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsAddingTenant(true)}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PlusIcon className="w-4 h-4 mr-2" />
+              Add Tenant
+            </motion.button>
+          </div>
+        </div>
       </div>
 
-      {/* Tenant List */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tenants.map((tenant) => (
-          <motion.div
-            key={tenant.id}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
-          >
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
-              <h3 className="text-lg font-semibold text-white">
-                {tenant.name}
-              </h3>
-              <p className="text-blue-100 text-sm">{tenant.unit}</p>
-            </div>
-            <div className="p-4 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Contact:</span>
-                <span className="text-gray-900">{tenant.contact}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Email:</span>
-                <span className="text-gray-900">{tenant.email}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Move-in Date:</span>
-                <span className="text-gray-900">{tenant.moveInDate}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Status:</span>
-                <span
-                  className={`px-2 py-1 rounded-full text-sm ${
-                    tenant.status === "Active"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {tenant.status}
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-8">
+          {Object.entries(groupedTenants).map(([propertyName, propertyTenants]) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              key={propertyName}
+              className="bg-white rounded-xl shadow-sm p-6"
+            >
+              <div className="flex items-center space-x-2 mb-6">
+                <HomeIcon className="w-6 h-6 text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-800">{propertyName}</h2>
+                <span className="text-sm text-gray-500">
+                  ({propertyTenants.length} tenants)
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Rent Status:</span>
-                <span
-                  className={`px-2 py-1 rounded-full text-sm ${
-                    tenant.rentStatus === "Paid"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {tenant.rentStatus}
-                </span>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tenant
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Unit
+                      </th>
+                      <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Contact
+                      </th>
+                      <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Move In
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Rent
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {propertyTenants.map((tenant) => (
+                      <tr
+                        key={tenant.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-4 py-4">
+                          <div>
+                            <div className="font-medium text-gray-900">{tenant.name}</div>
+                            <div className="text-sm text-gray-500">{tenant.email}</div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500">
+                          {tenant.unit}
+                        </td>
+                        <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-500">
+                          {tenant.contact}
+                        </td>
+                        <td className="hidden lg:table-cell px-4 py-4 text-sm text-gray-500">
+                          {tenant.moveInDate}
+                        </td>
+                        <td className="px-4 py-4">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                              ${tenant.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                          >
+                            {tenant.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                              ${tenant.rentStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}
+                          >
+                            {tenant.rentStatus}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
-            <div className="border-t px-4 py-3 bg-gray-50 flex justify-end space-x-3">
-              <button className="text-blue-600 hover:text-blue-800">
-                Edit
-              </button>
-              <button className="text-red-600 hover:text-red-800">
-                Delete
-              </button>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Add Tenant Modal */}
@@ -183,6 +194,15 @@ const TenantsPage = () => {
                 </label>
                 <input
                   {...register("name")}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Property Name
+                </label>
+                <input
+                  {...register("propertyName")}
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>

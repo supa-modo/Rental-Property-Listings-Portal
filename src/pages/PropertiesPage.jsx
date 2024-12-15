@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { BiPlus } from "react-icons/bi";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 const PropertiesPage = () => {
   const [properties, setProperties] = useState([
@@ -18,7 +20,7 @@ const PropertiesPage = () => {
       monthlyRevenue: 3700,
     },
     {
-      id: 1,
+      id: 5,
       name: "Sunset Apartments",
       address: "123 Sunset Blvd",
       units: [
@@ -31,7 +33,7 @@ const PropertiesPage = () => {
       monthlyRevenue: 3700,
     },
     {
-      id: 1,
+      id: 4,
       name: "Sunset Apartments",
       address: "123 Sunset Blvd",
       units: [
@@ -44,7 +46,7 @@ const PropertiesPage = () => {
       monthlyRevenue: 3700,
     },
     {
-      id: 1,
+      id: 2,
       name: "Sunset Apartments",
       address: "123 Sunset Blvd",
       units: [
@@ -57,7 +59,7 @@ const PropertiesPage = () => {
       monthlyRevenue: 3700,
     },
     {
-      id: 1,
+      id: 3,
       name: "Sunset Apartments",
       address: "123 Sunset Blvd",
       units: [
@@ -82,94 +84,75 @@ const PropertiesPage = () => {
   };
 
   return (
-    <div className="p-12  min-h-screen space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Property Management</h1>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setIsAddingProperty(true)}
-          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all"
-        >
-          Add New Property
-        </motion.button>
-      </div>
-
-      {/* Property Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {properties.map((property) => (
-          <motion.div
-            key={property.id}
-            whileHover={{ scale: 1.01 }}
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
+    <div className="p-8 min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-semibold text-gray-800">Properties</h1>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setIsAddingProperty(true)}
+            className="px-4 py-2 flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-all"
           >
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4">
-              <h3 className="text-xl font-bold text-white">{property.name}</h3>
-              <p className="text-purple-100">{property.address}</p>
-            </div>
-            
-            {/* Property Stats */}
-            <div className="p-4">
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <p className="text-sm text-purple-600 font-medium">Total Units</p>
-                  <p className="text-xl font-bold text-purple-900">{property.totalUnits}</p>
-                </div>
-                <div className="text-center p-3 bg-indigo-50 rounded-lg">
-                  <p className="text-sm text-indigo-600 font-medium">Occupancy</p>
-                  <p className="text-xl font-bold text-indigo-900">{property.occupancyRate}</p>
-                </div>
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-600 font-medium">Revenue</p>
-                  <p className="text-xl font-bold text-blue-900">${property.monthlyRevenue}</p>
-                </div>
-              </div>
+            <PlusIcon className="w-5 h-5" />
+            <span>Add Property</span>
+          </motion.button>
+        </div>
 
-              {/* Units List */}
-              <div className="space-y-2">
-                <h4 className="font-semibold text-gray-900 mb-2">Units</h4>
-                {property.units.map((unit) => (
-                  <div
-                    key={unit.number}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium">Unit {unit.number}</p>
-                      <p className="text-sm text-gray-600">${unit.rent}/month</p>
-                    </div>
-                    <span
-                      className={`px-2 py-1 rounded-full text-sm ${
-                        unit.status === "Occupied"
-                          ? "bg-green-100 text-green-800"
-                          : unit.status === "Vacant"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {unit.status}
-                    </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <motion.div
+              key={property.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100"
+            >
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">{property.name}</h3>
+                  <p className="text-gray-500">{property.address}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-gray-500">Total Units</p>
+                    <p className="text-lg font-medium text-gray-800">{property.totalUnits}</p>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-gray-500">Occupancy</p>
+                    <p className="text-lg font-medium text-gray-800">{property.occupancyRate}</p>
+                  </div>
+                </div>
 
-            {/* Actions */}
-            <div className="border-t px-4 py-3 bg-gray-50 flex justify-end space-x-3">
-              <button className="text-purple-600 hover:text-purple-800">
-                Edit Property
-              </button>
-              <button className="text-purple-600 hover:text-purple-800">
-                Add Unit
-              </button>
-              <button className="text-red-600 hover:text-red-800">
-                Delete
-              </button>
-            </div>
-          </motion.div>
-        ))}
+                <div className="border-t pt-4">
+                  <p className="text-sm text-gray-500">Monthly Revenue</p>
+                  <p className="text-xl font-semibold text-blue-600">${property.monthlyRevenue}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-700">Units Status</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {property.units.map((unit, index) => (
+                      <div key={index} className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span className="text-sm text-gray-600">Unit {unit.number}</span>
+                        <span className={`text-sm px-2 py-1 rounded ${
+                          unit.status === 'Occupied' ? 'bg-green-100 text-green-700' :
+                          unit.status === 'Vacant' ? 'bg-red-100 text-red-700' :
+                          'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {unit.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      {/* Add Property Modal */}
+      {/* Modal for adding new property */}
       {isAddingProperty && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <motion.div

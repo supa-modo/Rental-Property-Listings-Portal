@@ -34,7 +34,7 @@ const ProfilePage = () => {
           >
             <div className="bg-white rounded-2xl shadow-lg h-full">
               <div className="relative">
-                <div className="h-32 bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-2xl"></div>
+                <div className="h-32 bg-gradient-to-br from-gray-400 to-indigo-500 rounded-t-2xl"></div>
                 <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
                   <div className="relative group">
                     <div className="w-24 h-24 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center overflow-hidden">
