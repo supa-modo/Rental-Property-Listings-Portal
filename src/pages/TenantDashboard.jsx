@@ -24,6 +24,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import MaintenanceModal from "../components/tenants/MaintenanceRequestModal";
+import PaymentsTab from "../components/tenants/PaymentsTab";
 
 const TenantDashboard = () => {
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
@@ -321,58 +322,7 @@ const TenantDashboard = () => {
 
         {/* Payments Tab */}
         {selectedTab === "payments" && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
-          >
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">
-              Payment History
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
-                      Date
-                    </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
-                      Amount
-                    </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
-                      Status
-                    </th>
-                    <th className="text-right py-3 text-sm font-medium text-gray-500">
-                      Invoice
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paymentHistory.map((payment) => (
-                    <tr key={payment.id} className="border-b border-gray-100">
-                      <td className="py-4 text-sm text-gray-900">
-                        {format(new Date(payment.date), "MMM d, yyyy")}
-                      </td>
-                      <td className="py-4 text-sm text-gray-900">
-                        ${payment.amount}
-                      </td>
-                      <td className="py-4">
-                        <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
-                          {payment.status}
-                        </span>
-                      </td>
-                      <td className="py-4 text-right">
-                        <button className="text-blue-600 hover:text-blue-800 inline-flex items-center text-sm">
-                          <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
-                          Download
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
+          <PaymentsTab paymentHistory={paymentHistory} />
         )}
 
         {/* Maintenance Tab */}
