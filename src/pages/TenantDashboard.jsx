@@ -9,17 +9,29 @@ import {
   WrenchIcon,
   ArrowDownTrayIcon,
   XMarkIcon,
+  ChartBarIcon,
+  BellIcon,
 } from "@heroicons/react/24/outline";
-import { useAuth } from "../context/AuthContext"; // Import the useAuth hook
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { LuLogOut } from "react-icons/lu";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import MaintenanceModal from "../components/tenants/MaintenanceRequestModal";
 
 const TenantDashboard = () => {
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
-  const navigate = useNavigate;
-  const { logout, user } = useAuth(); // Destructure logout and user from useAuth
+  const [selectedTab, setSelectedTab] = useState("overview");
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
-  // Mock data
+  // Extended mock data
   const tenantData = {
     unit: {
       number: "A-203",
@@ -79,43 +91,85 @@ const TenantDashboard = () => {
     },
   ];
 
+  const utilityData = [
+    { month: "Jan", electricity: 120, water: 45, gas: 30 },
+    { month: "Feb", electricity: 130, water: 48, gas: 35 },
+    { month: "Mar", electricity: 125, water: 52, gas: 38 },
+    { month: "Apr", electricity: 135, water: 50, gas: 32 },
+    { month: "May", electricity: 145, water: 55, gas: 36 },
+    { month: "Jun", electricity: 160, water: 58, gas: 40 },
+  ];
+
   const daysUntilPayment = differenceInDays(
     new Date(tenantData.nextPayment.date),
     new Date()
   );
 
   const handleLogout = () => {
-    logout(); // Call the logout method from AuthContext
-    navigate("/login"); // Navigate to login page after logout
+    logout();
+    navigate("/login");
   };
 
+  // Notification badge component
+  const NotificationBadge = () => (
+    <div className="relative">
+      <BellIcon className="w-6 h-6 text-gray-600 hover:text-blue-600 transition-colors" />
+      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+        2
+      </span>
+    </div>
+  );
+
+  // Tab navigation component
+  const TabNavigation = () => (
+    <div className="flex space-x-4 mb-6 border-b border-gray-300">
+      {["overview", "payments", "maintenance", "documents"].map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setSelectedTab(tab)}
+          className={`px-4 py-2 font-semibold transition-colors ${
+            selectedTab === tab
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-500 hover:text-gray-600"
+          }`}
+        >
+          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div>
-      <div className="bg-white border-b">
-        <div className=" mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 via-gray-100 to-indigo-200">
+      {/* Header */}
+      <div className="bg-gray-100 border-b sticky top-0 z-10 shadow-sm">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <HomeIcon className="w-8 h-8 text-blue-600" />
-              <div className="ml-4">
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Welcome, {user?.name || "Tenant"}
-                </h1>
-                <p className="text-sm text-gray-500">
-                  Unit {tenantData.unit.number} | {tenantData.unit.address}
-                </p>
+            <div className="flex items-center space-x-8">
+              <div className="flex items-center">
+                <HomeIcon className="w-8 h-8 text-blue-600" />
+                <div className="ml-4">
+                  <h1 className="text-xl font-extrabold text-gray-900">
+                    Welcome, {user?.name || "Tenant"}
+                  </h1>
+                  <p className="text-sm font-extrabold text-gray-500">
+                    Unit {tenantData.unit.number}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
+              <NotificationBadge />
               <button
                 onClick={() => setShowMaintenanceModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
               >
                 <WrenchIcon className="w-4 h-4 mr-2" />
                 Request Maintenance
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-6 py-2 rounded-md text-sm font-semibold text-white bg-red-500 hover:bg-gray-50 transition-colors"
               >
                 <LuLogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -124,123 +178,159 @@ const TenantDashboard = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto px-10 py-12 space-y-6 min-h-screen">
-        {/* Header */}
 
-        {/* Unit Details & Next Payment */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Unit Details Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <HomeIcon className="w-5 h-5 mr-2 text-blue-600" />
-                  Unit Details
-                </h2>
-                <p className="text-3xl font-bold text-gray-900 mt-2">
-                  Unit {tenantData.unit.number}
-                </p>
-              </div>
-            </div>
-            <div className="mt-4 space-y-3">
-              <p className="text-gray-600">{tenantData.unit.address}</p>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Type:</span>
-                <span className="text-gray-900 font-medium">
-                  {tenantData.unit.type}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Size:</span>
-                <span className="text-gray-900 font-medium">
-                  {tenantData.unit.size}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Monthly Rent:</span>
-                <span className="text-gray-900 font-medium">
-                  ${tenantData.unit.rent}
-                </span>
-              </div>
-            </div>
-          </motion.div>
+      {/* Main Content */}
+      <div className="max-w-screen-2xl shadow-xl min-h-screen mx-auto px-8 sm:px-12 lg:px-16 py-8">
+        <TabNavigation />
 
-          {/* Next Payment Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
-          >
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-              <CurrencyDollarIcon className="w-5 h-5 mr-2 text-green-600" />
-              Next Payment Due
-            </h2>
-            <div className="mt-4">
-              <p className="text-3xl font-bold text-gray-900">
-                ${tenantData.nextPayment.amount}
-              </p>
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center">
-                  <CalendarIcon className="w-5 h-5 text-gray-400 mr-2" />
-                  <span className="text-gray-600">
-                    Due on{" "}
-                    {format(
-                      new Date(tenantData.nextPayment.date),
-                      "MMMM d, yyyy"
-                    )}
-                  </span>
+        {/* Overview Section */}
+        {selectedTab === "overview" && (
+          <div className="space-y-6">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-br from-gray-100 to-blue-200 rounded-xl shadow-sm p-6 border border-gray-300"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">
+                      Next Payment
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      ${tenantData.nextPayment.amount}
+                    </p>
+                  </div>
+                  <div className="bg-blue-100 p-3 rounded-full">
+                    <CurrencyDollarIcon className="w-6 h-6 text-blue-600" />
+                  </div>
                 </div>
-                <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg">
-                  {daysUntilPayment} days until next payment
+                <div className="mt-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <CalendarIcon className="w-4 h-4 mr-1" />
+                    Due in {daysUntilPayment} days
+                  </div>
                 </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+              </motion.div>
 
-        {/* Documents Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-lg p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Documents
-          </h2>
-          <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <DocumentTextIcon className="w-8 h-8 text-blue-600" />
-              <div>
-                <h3 className="font-medium text-gray-900">Lease Agreement</h3>
-                <p className="text-sm text-gray-500">
-                  Valid until Dec 31, 2024
-                </p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-gradient-to-br from-gray-100 to-blue-200 rounded-xl shadow-sm p-6 border border-gray-300"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">
+                      Maintenance
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {maintenanceRequests.length} Active
+                    </p>
+                  </div>
+                  <div className="bg-green-100 p-3 rounded-full">
+                    <WrenchIcon className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <ChartBarIcon className="w-4 h-4 mr-1" />
+                    {
+                      maintenanceRequests.filter(
+                        (r) => r.status === "Completed"
+                      ).length
+                    }{" "}
+                    completed this month
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-gradient-to-br from-gray-100 to-blue-200 rounded-xl shadow-sm p-6 border border-gray-300"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">
+                      Lease Status
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">Active</p>
+                  </div>
+                  <div className="bg-purple-100 p-3 rounded-full">
+                    <DocumentTextIcon className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <CalendarIcon className="w-4 h-4 mr-1" />
+                    Expires Dec 31, 2024
+                  </div>
+                </div>
+              </motion.div>
             </div>
-            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
-              <ArrowDownTrayIcon className="w-5 h-5" />
-              <span>Download</span>
-            </button>
+
+            {/* Utility Usage Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
+            >
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Utility Usage
+              </h2>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={utilityData}>
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="electricity"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="water"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="gas"
+                      stroke="#f59e0b"
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+        )}
 
-        {/* Payment History & Documents */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Payment History */}
+        {/* Maintenance Request Modal */}
+        <MaintenanceModal
+          showMaintenanceModal={showMaintenanceModal}
+          setShowMaintenanceModal={setShowMaintenanceModal}
+        />
+
+        {/* Payments Tab */}
+        {selectedTab === "payments" && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
           >
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">
               Payment History
             </h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 text-sm font-medium text-gray-500">
@@ -260,21 +350,21 @@ const TenantDashboard = () => {
                 <tbody>
                   {paymentHistory.map((payment) => (
                     <tr key={payment.id} className="border-b border-gray-100">
-                      <td className="py-3 text-sm text-gray-900">
+                      <td className="py-4 text-sm text-gray-900">
                         {format(new Date(payment.date), "MMM d, yyyy")}
                       </td>
-                      <td className="py-3 text-sm text-gray-900">
+                      <td className="py-4 text-sm text-gray-900">
                         ${payment.amount}
                       </td>
-                      <td className="py-3 text-sm">
+                      <td className="py-4">
                         <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
                           {payment.status}
                         </span>
                       </td>
-                      <td className="py-3 text-sm text-right">
-                        <button className="text-blue-600 hover:text-blue-800 flex items-center justify-end space-x-1">
-                          <ArrowDownTrayIcon className="w-4 h-4" />
-                          <span>Download</span>
+                      <td className="py-4 text-right">
+                        <button className="text-blue-600 hover:text-blue-800 inline-flex items-center text-sm">
+                          <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
+                          Download
                         </button>
                       </td>
                     </tr>
@@ -283,24 +373,23 @@ const TenantDashboard = () => {
               </table>
             </div>
           </motion.div>
+        )}
 
-          {/* Maintenance Requests */}
+        {/* Maintenance Tab */}
+        {selectedTab === "maintenance" && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="space-y-6"
           >
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Maintenance Requests
-            </h2>
-            <div className="space-y-4">
+            <div className="grid gap-6">
               {maintenanceRequests.map((request) => (
                 <div
                   key={request.id}
-                  className="border border-gray-100 rounded-lg p-4"
+                  className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
                 >
                   <div className="flex justify-between items-start">
-                    <div>
+                    <div className="space-y-1">
                       <h3 className="font-medium text-gray-900">
                         {request.issue}
                       </h3>
@@ -318,7 +407,7 @@ const TenantDashboard = () => {
                       {request.status}
                     </span>
                   </div>
-                  <div className="mt-2 text-sm">
+                  <div className="mt-4">
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
                         request.priority === "High"
@@ -335,98 +424,39 @@ const TenantDashboard = () => {
               ))}
             </div>
           </motion.div>
-        </div>
+        )}
 
-        {/* Maintenance Request Modal */}
-        <AnimatePresence>
-          {showMaintenanceModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    New Maintenance Request
-                  </h2>
-                  <button
-                    onClick={() => setShowMaintenanceModal(false)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <XMarkIcon className="w-6 h-6" />
-                  </button>
+        {/* Documents Tab */}
+        {selectedTab === "documents" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
+          >
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              Documents
+            </h2>
+            <div className="space-y-4">
+              <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div className="flex items-center space-x-4">
+                  <DocumentTextIcon className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">
+                      {tenantData.leaseDocument.name}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Valid until Dec 31, 2024
+                    </p>
+                  </div>
                 </div>
-                <form className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Issue Type
-                    </label>
-                    <select className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                      <option>Plumbing</option>
-                      <option>Electrical</option>
-                      <option>HVAC</option>
-                      <option>Appliance</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Priority
-                    </label>
-                    <select className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                      <option>Low</option>
-                      <option>Medium</option>
-                      <option>High</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      rows={4}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      placeholder="Please describe the issue in detail..."
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Preferred Date for Inspection
-                    </label>
-                    <input
-                      type="date"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowMaintenanceModal(false)}
-                      className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                    >
-                      Cancel
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      type="submit"
-                      className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all"
-                    >
-                      Submit Request
-                    </motion.button>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  <span>Download</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
