@@ -25,6 +25,8 @@ import {
 } from "recharts";
 import MaintenanceModal from "../components/tenants/MaintenanceRequestModal";
 import PaymentsTab from "../components/tenants/PaymentsTab";
+import MaintenanceTab from "../components/tenants/MaintenanceTab";
+import TenantDetails from "../components/tenants/TenantDetails";
 
 const TenantDashboard = () => {
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
@@ -273,43 +275,13 @@ const TenantDashboard = () => {
               </motion.div>
             </div>
 
-            {/* Utility Usage Chart */}
+            {/* Documents section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
             >
-              {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Utility Usage
-              </h2>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={utilityData}>
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="electricity"
-                      stroke="#3b82f6"
-                      strokeWidth={2}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="water"
-                      stroke="#10b981"
-                      strokeWidth={2}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="gas"
-                      stroke="#f59e0b"
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div> */}
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
                 Documents
               </h2>
@@ -346,89 +318,11 @@ const TenantDashboard = () => {
         {selectedTab === "payments" && (
           <PaymentsTab paymentHistory={paymentHistory} />
         )}
+        {/* Tenant Details Tab */}
+        {selectedTab === "tenant details" && <TenantDetails />}
 
         {/* Maintenance Tab */}
-        {selectedTab === "maintenance" && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="grid gap-6">
-              {maintenanceRequests.map((request) => (
-                <div
-                  key={request.id}
-                  className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <h3 className="font-medium text-gray-900">
-                        {request.issue}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {format(new Date(request.date), "MMM d, yyyy")}
-                      </p>
-                    </div>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        request.status === "Completed"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-                  </div>
-                  <div className="mt-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        request.priority === "High"
-                          ? "bg-red-100 text-red-700"
-                          : request.priority === "Medium"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {request.priority} Priority
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Documents Tab */}
-        {/* {selectedTab === "documents" && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
-          >
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">
-              Documents
-            </h2>
-            <div className="space-y-4">
-              <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-4">
-                  <DocumentTextIcon className="w-8 h-8 text-blue-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      {tenantData.leaseDocument.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Valid until Dec 31, 2024
-                    </p>
-                  </div>
-                </div>
-                <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
-                  <ArrowDownTrayIcon className="w-5 h-5" />
-                  <span>Download</span>
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )} */}
+        {selectedTab === "maintenance" && <MaintenanceTab />}
       </div>
     </div>
   );
