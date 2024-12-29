@@ -21,26 +21,29 @@ const MaintenanceModal = ({
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             className="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8 w-full max-w-3xl border border-gray-100"
           >
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
                   New Maintenance Request
                 </h2>
-                <p className="text-gray-500 font-semibold font-sans mt-1">Fill in the details of your maintenance request below</p>
+                <p className="text-gray-500 font-semibold font-sans mt-1">
+                  Fill in detailed and complete descriptions of your maintenance
+                  issue below
+                </p>
               </div>
-              <button
+              {/* <button
                 onClick={() => setShowMaintenanceModal(false)}
-                className="rounded-full p-2 hover:bg-gray-100 transition-colors"
+                className="rounded-full p- hover:bg-gray-100 transition-colors"
               >
                 <XMarkIcon className="w-7 h-7 text-gray-400 hover:text-red-600" />
-              </button>
+              </button> */}
             </div>
 
             <form className="space-y-6 ">
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                    Issue Type
+                    Repair / Maintenance Type
                   </label>
                   <select className="w-full px-4 py-3 font-bold text-red-500 border border-gray-200 rounded-xl focus:ring-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm">
                     <option>Plumbing</option>

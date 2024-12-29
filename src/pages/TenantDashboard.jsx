@@ -123,8 +123,8 @@ const TenantDashboard = () => {
 
   // Tab navigation component
   const TabNavigation = () => (
-    <div className="flex space-x-4 mb-6 border-b border-gray-300">
-      {["overview", "payments", "maintenance", "documents"].map((tab) => (
+    <div className="flex space-x-10 mb-6 border-b border-gray-300">
+      {["overview", "payments", "maintenance", "tenant details"].map((tab) => (
         <button
           key={tab}
           onClick={() => setSelectedTab(tab)}
@@ -280,7 +280,7 @@ const TenantDashboard = () => {
               transition={{ delay: 0.3 }}
               className="bg-white rounded-xl shadow-sm p-6 border border-gray-100"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Utility Usage
               </h2>
               <div className="h-64">
@@ -309,6 +309,28 @@ const TenantDashboard = () => {
                     />
                   </LineChart>
                 </ResponsiveContainer>
+              </div> */}
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">
+                Documents
+              </h2>
+              <div className="space-y-4">
+                <div className="border border-gray-100 rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center space-x-4">
+                    <DocumentTextIcon className="w-8 h-8 text-blue-600" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        {tenantData.leaseDocument.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Valid until Dec 31, 2024
+                      </p>
+                    </div>
+                  </div>
+                  <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                    <ArrowDownTrayIcon className="w-5 h-5" />
+                    <span>Download</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -377,7 +399,7 @@ const TenantDashboard = () => {
         )}
 
         {/* Documents Tab */}
-        {selectedTab === "documents" && (
+        {/* {selectedTab === "documents" && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -406,7 +428,7 @@ const TenantDashboard = () => {
               </div>
             </div>
           </motion.div>
-        )}
+        )} */}
       </div>
     </div>
   );
