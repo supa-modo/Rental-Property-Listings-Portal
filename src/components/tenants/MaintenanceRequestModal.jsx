@@ -1,11 +1,17 @@
 import React from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MaintenanceModal = ({
   showMaintenanceModal,
   setShowMaintenanceModal,
 }) => {
+  const handleModalClose = (e) => {
+    // Only close if clicking the backdrop (not the modal content)
+    if (e.target === e.currentTarget) {
+      setShowMaintenanceModal(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       {showMaintenanceModal && (
@@ -14,12 +20,14 @@ const MaintenanceModal = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={handleModalClose}
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             className="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8 w-full max-w-3xl border border-gray-100"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between mb-8">
               <div>
@@ -31,12 +39,6 @@ const MaintenanceModal = ({
                   issue below
                 </p>
               </div>
-              {/* <button
-                onClick={() => setShowMaintenanceModal(false)}
-                className="rounded-full p- hover:bg-gray-100 transition-colors"
-              >
-                <XMarkIcon className="w-7 h-7 text-gray-400 hover:text-red-600" />
-              </button> */}
             </div>
 
             <form className="space-y-6 ">
@@ -85,14 +87,27 @@ const MaintenanceModal = ({
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                  Preferred Inspection Date
-                </label>
-                <input
-                  type="date"
-                  className="w-full px-4 py-3 border text-green-800 font-bold border-gray-200 rounded-xl focus:ring-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                />
+              <div className="flex items-center justify-between space-x-8">
+                <div className="w-full">
+                  <label className="block text-sm font-extrabold text-gray-700 mb-2">
+                    Preferred Inspection Date
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-4 py-3 border text-green-800 font-bold border-gray-200 rounded-xl focus:ring-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                  />
+                </div>
+
+                <div className="w-full">
+                  <label className="block text-sm font-extrabold text-gray-700 mb-2">
+                    Location of Issue
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. room or area - bedroom / toilet......"
+                    className="w-full px-4 py-3 border text-green-800 font-bold border-gray-200 rounded-xl focus:ring-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end font-bold space-x-4 pt-6">

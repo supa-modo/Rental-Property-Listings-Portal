@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { UserIcon, BuildingOfficeIcon, DocumentTextIcon, KeyIcon, PencilIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useState } from "react";
+import {
+  UserIcon,
+  BuildingOfficeIcon,
+  DocumentTextIcon,
+  KeyIcon,
+  PencilIcon,
+  CheckIcon,
+} from "@heroicons/react/24/outline";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaCheck, FaKey, FaUnlockKeyhole } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 
 const TenantDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -12,8 +22,8 @@ const TenantDetails = () => {
       emergencyContact: {
         name: "Jane Doe",
         relation: "Spouse",
-        phone: "+254 789 123 567"
-      }
+        phone: "+254 789 123 567",
+      },
     },
     residenceInfo: {
       buildingName: "Dala Luxury Heights",
@@ -23,7 +33,7 @@ const TenantDetails = () => {
       unitType: "2 Bedroom Appartment Suite",
       squareFootage: "1,200 sq ft",
       parkingSpot: "P-45",
-      moveInDate: "2024-01-15"
+      moveInDate: "2024-01-15",
     },
     leaseInfo: {
       startDate: "2024-01-15",
@@ -31,46 +41,55 @@ const TenantDetails = () => {
       monthlyRent: "Kshs. 62,500",
       securityDeposit: "Kshs. 60,750",
       leaseType: "Fixed Term",
-      paymentDueDate: "25th of each month"
-    }
+      paymentDueDate: "25th of each month",
+    },
   });
 
   const handleInputChange = (section, field, value) => {
-    setTenantData(prev => ({
+    setTenantData((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
   const handleEmergencyContactChange = (field, value) => {
-    setTenantData(prev => ({
+    setTenantData((prev) => ({
       ...prev,
       personalInfo: {
         ...prev.personalInfo,
         emergencyContact: {
           ...prev.personalInfo.emergencyContact,
-          [field]: value
-        }
-      }
+          [field]: value,
+        },
+      },
     }));
   };
 
   const InfoSection = ({ title, icon: Icon, children, className = "" }) => (
-    <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 transition-all duration-300 hover:shadow-xl ${className}`}>
-      <div className="flex items-center space-x-3 mb-6">
+    <div className="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8 border border-gray-100">
+      <div className="flex items-center space-x-3 mb-8">
         <Icon className="w-6 h-6 text-blue-600" />
-        <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+        <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+          {title}
+        </h2>
       </div>
       {children}
     </div>
   );
 
-  const InputField = ({ label, type = "text", value, onChange, disabled = !isEditing, className = "" }) => (
+  const InputField = ({
+    label,
+    type = "text",
+    value,
+    onChange,
+    disabled = true,
+    className = "",
+  }) => (
     <div className={className}>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-extrabold text-gray-700 mb-2">
         {label}
       </label>
       <input
@@ -78,51 +97,96 @@ const TenantDetails = () => {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md disabled:bg-gray-50 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        className="w-full px-4 py-3 border font-semibold text-gray-500 border-gray-200 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm disabled:bg-gray-50/80"
       />
     </div>
   );
 
+  const handleModalClose = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowPasswordModal(false);
+    }
+  };
+
   const PasswordModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md animate-fadeIn">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Reset Password</h3>
-          <button
-            onClick={() => setShowPasswordModal(false)}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+    <AnimatePresence>
+      {showPasswordModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={handleModalClose}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            className="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8 w-full max-w-lg border border-gray-100"
+            onClick={(e) => e.stopPropagation()}
           >
-            <XMarkIcon className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="space-y-4">
-          <InputField 
-            label="Current Password"
-            type="password"
-            value=""
-            onChange={() => {}}
-            disabled={false}
-          />
-          <InputField 
-            label="New Password"
-            type="password"
-            value=""
-            onChange={() => {}}
-            disabled={false}
-          />
-          <InputField 
-            label="Confirm New Password"
-            type="password"
-            value=""
-            onChange={() => {}}
-            disabled={false}
-          />
-          <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
-            Update Password
-          </button>
-        </div>
-      </div>
-    </div>
+            <div className="mb-8">
+              <div>
+                <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                  Reset Your Account Password
+                </h2>
+                <p className="text-gray-500 font-semibold font-sans mt-1">
+                  Enter your current password and choose a new one
+                </p>
+              </div>
+            </div>
+
+            <form className="space-y-6">
+              <div>
+                <label className="block text-sm font-extrabold text-gray-700 mb-2">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full px-4 py-3 border font-semibold text-gray-500 border-gray-200 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-extrabold text-gray-700 mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full px-4 py-3 border font-semibold text-gray-500 border-gray-200 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-extrabold text-gray-700 mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full px-4 py-3 border font-semibold text-gray-500 border-gray-200 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-4 pt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  className="px-6 py-3 font-bold text-gray-500 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all font-medium"
+                >
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
   return (
@@ -131,28 +195,28 @@ const TenantDetails = () => {
       <div className="flex justify-end space-x-4">
         <button
           onClick={() => setShowPasswordModal(true)}
-          className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          className="flex items-center border px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-bold"
         >
-          <KeyIcon className="w-4 h-4 mr-2" />
-          Reset Password
+          <FaKey className="w-[1.2rem] mr-2 text-gray-600" />
+          Reset Account Password
         </button>
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+          className={`flex items-center px-8 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl font-medium ${
             isEditing
-              ? "bg-green-600 text-white hover:bg-green-700"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              ? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+              : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-700 hover:to-indigo-700 text-white"
           }`}
         >
           {isEditing ? (
             <>
-              <CheckIcon className="w-4 h-4 mr-2" />
+              <FaCheck className="w-[1.2rem] h-5 mr-3" />
               Save Changes
             </>
           ) : (
             <>
-              <PencilIcon className="w-4 h-4 mr-2" />
-              Edit Details
+              <FaEdit className="w-[1.2rem] mr-3" />
+              Edit Personal Info
             </>
           )}
         </button>
@@ -164,40 +228,60 @@ const TenantDetails = () => {
           <InputField
             label="Full Name"
             value={tenantData.personalInfo.name}
-            onChange={(e) => handleInputChange('personalInfo', 'name', e.target.value)}
+            onChange={(e) =>
+              handleInputChange("personalInfo", "name", e.target.value)
+            }
+            disabled={!isEditing}
           />
           <InputField
             label="Email"
             type="email"
             value={tenantData.personalInfo.email}
-            onChange={(e) => handleInputChange('personalInfo', 'email', e.target.value)}
+            onChange={(e) =>
+              handleInputChange("personalInfo", "email", e.target.value)
+            }
+            disabled={!isEditing}
           />
           <InputField
             label="Phone Number"
             type="tel"
             value={tenantData.personalInfo.phone}
-            onChange={(e) => handleInputChange('personalInfo', 'phone', e.target.value)}
+            onChange={(e) =>
+              handleInputChange("personalInfo", "phone", e.target.value)
+            }
+            disabled={!isEditing}
           />
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Emergency Contact</h3>
+          <h3 className="text-lg font-extrabold text-gray-900 mb-4">
+            Emergency Contact
+          </h3>
           <div className="grid md:grid-cols-3 gap-6">
             <InputField
               label="Name"
               value={tenantData.personalInfo.emergencyContact.name}
-              onChange={(e) => handleEmergencyContactChange('name', e.target.value)}
+              onChange={(e) =>
+                handleEmergencyContactChange("name", e.target.value)
+              }
+              disabled={!isEditing}
             />
             <InputField
               label="Relation"
               value={tenantData.personalInfo.emergencyContact.relation}
-              onChange={(e) => handleEmergencyContactChange('relation', e.target.value)}
+              onChange={(e) =>
+                handleEmergencyContactChange("relation", e.target.value)
+              }
+              disabled={!isEditing}
             />
             <InputField
               label="Phone Number"
               type="tel"
               value={tenantData.personalInfo.emergencyContact.phone}
-              onChange={(e) => handleEmergencyContactChange('phone', e.target.value)}
+              onChange={(e) =>
+                handleEmergencyContactChange("phone", e.target.value)
+              }
+              disabled={!isEditing}
             />
           </div>
         </div>
@@ -209,43 +293,32 @@ const TenantDetails = () => {
           <InputField
             label="Building Name"
             value={tenantData.residenceInfo.buildingName}
-            onChange={(e) => handleInputChange('residenceInfo', 'buildingName', e.target.value)}
           />
           <InputField
             label="Building Address"
             value={tenantData.residenceInfo.buildingAddress}
-            onChange={(e) => handleInputChange('residenceInfo', 'buildingAddress', e.target.value)}
           />
           <InputField
             label="Unit Number"
             value={tenantData.residenceInfo.unitNumber}
-            onChange={(e) => handleInputChange('residenceInfo', 'unitNumber', e.target.value)}
           />
-          <InputField
-            label="Floor"
-            value={tenantData.residenceInfo.floor}
-            onChange={(e) => handleInputChange('residenceInfo', 'floor', e.target.value)}
-          />
+          <InputField label="Floor" value={tenantData.residenceInfo.floor} />
           <InputField
             label="Unit Type"
             value={tenantData.residenceInfo.unitType}
-            onChange={(e) => handleInputChange('residenceInfo', 'unitType', e.target.value)}
           />
           <InputField
             label="Square Footage"
             value={tenantData.residenceInfo.squareFootage}
-            onChange={(e) => handleInputChange('residenceInfo', 'squareFootage', e.target.value)}
           />
           <InputField
             label="Parking Spot"
             value={tenantData.residenceInfo.parkingSpot}
-            onChange={(e) => handleInputChange('residenceInfo', 'parkingSpot', e.target.value)}
           />
           <InputField
             label="Move-in Date"
             type="date"
             value={tenantData.residenceInfo.moveInDate}
-            onChange={(e) => handleInputChange('residenceInfo', 'moveInDate', e.target.value)}
           />
         </div>
       </InfoSection>
@@ -257,33 +330,27 @@ const TenantDetails = () => {
             label="Start Date"
             type="date"
             value={tenantData.leaseInfo.startDate}
-            onChange={(e) => handleInputChange('leaseInfo', 'startDate', e.target.value)}
           />
           <InputField
             label="End Date"
             type="date"
             value={tenantData.leaseInfo.endDate}
-            onChange={(e) => handleInputChange('leaseInfo', 'endDate', e.target.value)}
           />
           <InputField
             label="Monthly Rent"
             value={tenantData.leaseInfo.monthlyRent}
-            onChange={(e) => handleInputChange('leaseInfo', 'monthlyRent', e.target.value)}
           />
           <InputField
             label="Security Deposit"
             value={tenantData.leaseInfo.securityDeposit}
-            onChange={(e) => handleInputChange('leaseInfo', 'securityDeposit', e.target.value)}
           />
           <InputField
             label="Lease Type"
             value={tenantData.leaseInfo.leaseType}
-            onChange={(e) => handleInputChange('leaseInfo', 'leaseType', e.target.value)}
           />
           <InputField
             label="Payment Due Date"
             value={tenantData.leaseInfo.paymentDueDate}
-            onChange={(e) => handleInputChange('leaseInfo', 'paymentDueDate', e.target.value)}
           />
         </div>
       </InfoSection>
